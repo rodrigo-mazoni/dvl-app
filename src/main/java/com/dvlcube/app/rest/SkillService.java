@@ -39,7 +39,7 @@ public class SkillService implements MxFilterableBeanService<SkillBean, Long> {
 	@Override
 	@GetMapping
 	public Iterable<SkillBean> get(@RequestParam Map<String, String> params) {
-		return repo.firstPage();
+		return repo.findAllByOrderByNameAsc();
 	}
 
 	@Override
@@ -79,8 +79,18 @@ public class SkillService implements MxFilterableBeanService<SkillBean, Long> {
 	}
 
 	@GetMapping("/like")
-	public Iterable<SkillBean> getLike(@RequestParam(required = true) String id) {
-		return repo.findAllLike(id);
+	public Iterable<SkillBean> getLike(@RequestParam(required = true) String name) {
+		return repo.findByNameContainingIgnoreCase(name);
+	}
+
+	@GetMapping("/name/{name}")
+	public SkillBean getName(@PathVariable String name) {
+		return repo.findByName(name);
+	}
+
+	@GetMapping("/exists/name/{name}")
+	public Boolean getExist(@PathVariable String name) {
+		return repo.existsByName(name);
 	}
 
 	@DeleteMapping("/{id}")
